@@ -5,7 +5,9 @@ public class CodeTree {
     private List<List<Integer>> codes;
 
     public CodeTree(InternalNode root, int symbolLimit) {
-        this.root = Objects.requireNonNull(root);
+        //this.root = Objects.requireNonNull(root);
+        Objects.requireNonNull(root, "Root must not be null");
+        this.root = root;
 
         codes = new ArrayList<List<Integer>>();
         //add 257 nulls to list
