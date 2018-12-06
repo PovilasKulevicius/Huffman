@@ -48,9 +48,9 @@ public class CodeTree {
          * CIA BAIGEM
          */
 
-        //Remaining node
-        InternalNode node_ = (InternalNode)pqueue.remove().node;//Root
-        CodeTree code = new CodeTree(node_, freqs.frequencies.length); //frequencies.length = 257, max symbols
+        //Likus vienam lapui, kuris turi didziausia dazni, jis padaromas saknimi
+        InternalNode last_node = (InternalNode)pqueue.remove().node;//Root
+        CodeTree code = new CodeTree(last_node, freqs.frequencies.length); //freqs.frequencies.length = 257, max symbols
 
         return code;
     }

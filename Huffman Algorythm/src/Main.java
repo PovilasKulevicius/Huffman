@@ -6,9 +6,9 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
 
-        //Reikia dvieju failu input ir output
+        //Required two files: input and output
         if (args.length != 2) {
-            System.out.println("Nenurodyti failai");
+            System.out.println("Error: files not specified");
             System.exit(1);
             return;
         }
