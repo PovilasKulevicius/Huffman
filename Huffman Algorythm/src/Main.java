@@ -31,11 +31,12 @@ public class Main {
             code = canonCode.toCodeTree();
 
 
-            InputStream in = new BufferedInputStream(new FileInputStream(inputFile));
-            BitOutputStream out = new BitOutputStream(new BufferedOutputStream(new FileOutputStream(outputFile)));
+            try (InputStream in = new BufferedInputStream(new FileInputStream(inputFile))) {
+                try (BitOutputStream out = new BitOutputStream(new BufferedOutputStream(new FileOutputStream(outputFile)))) {
                     writeCodeLengthTable(out, canonCode);
                     compress(code, in, out);
-                    out.write(10);
+                }
+            }
 
 
         }catch(Exception e){
