@@ -67,7 +67,7 @@ public class HuffmanCompress {
             if (b == -1)
                 break;
             enc.write(b);
-            System.out.println("b: "+b);
+            //System.out.println("b: "+b);
         }
         enc.write(256);  // EOF
     }

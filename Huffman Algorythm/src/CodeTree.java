@@ -77,8 +77,8 @@ public class CodeTree {
 //            }
 
             codes.set(leaf.symbol, new ArrayList<Integer>(prefix));
-            System.out.println("leaf.symbol: "+leaf.symbol);
-            System.out.println("prefix: "+prefix);
+            //System.out.println("leaf.symbol: "+leaf.symbol);
+            //System.out.println("prefix: "+prefix);
 
         } else {
             System.out.println("Error");

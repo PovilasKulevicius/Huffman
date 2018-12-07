@@ -62,7 +62,7 @@ public final class BitOutputStream implements AutoCloseable {
         //System.out.println("currentByte2: "+currentByte);
         numBitsFilled++;
         if (numBitsFilled == 8) {
-            System.out.println("currentByte: " + currentByte);
+            //System.out.println("currentByte: " + currentByte);
             output.write(currentByte);
             currentByte = 0;
             numBitsFilled = 0;
