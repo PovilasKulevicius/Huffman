@@ -20,17 +20,55 @@ public class Main {
             Frequencies freqs = Frequencies.getFrequencies(inputFile);
             freqs.increment(256);
 
-            freqs.printFreqs();
+            //freqs.printFreqs();
 
 
             CodeTree code = CodeTree.buildCodeTree(freqs);
 
 
+            //System.out.println("length: "+freqs.frequencies.length);
+            CanonicalCode canonCode = new CanonicalCode(code);
+            code = canonCode.toCodeTree();
+
+
+            InputStream in = new BufferedInputStream(new FileInputStream(inputFile));
+            BitOutputStream out = new BitOutputStream(new BufferedOutputStream(new FileOutputStream(outputFile)));
+                    writeCodeLengthTable(out, canonCode);
+                    compress(code, in, out);
+                    out.write(10);
+
+
         }catch(Exception e){
             e.printStackTrace();
         }
-
-
-
     }
+
+
+    static void writeCodeLengthTable(BitOutputStream out, CanonicalCode canonCode) throws IOException {
+        for (int i = 0; i < 257; i++) {
+            int val = canonCode.getCodeLength(i);
+            //System.out.println("val: " + val);
+
+            // Write value as 8 bits in big endian
+            for (int j = 7; j >= 0; j--) {
+                out.write((val >>> j) & 1); //Pasiimamas tik vienas bitas ir irasomas. Ima tik po viena bita is val
+                //System.out.println("Bit: "+((val >>> j) & 1));
+            }
+        }
+    }
+
+    static void compress(CodeTree code, InputStream in, BitOutputStream out) throws IOException {
+        HuffmanEncoder enc = new HuffmanEncoder(out);
+        enc.codeTree = code;
+        while (true) {
+            int b = in.read();
+            //System.out.println("b: "+b);
+            if (b == -1)
+                break;
+            enc.write(b);
+            System.out.println("b: "+b);
+        }
+        enc.write(256);  // EOF
+    }
+
     }

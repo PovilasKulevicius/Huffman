@@ -5,9 +5,9 @@ public class CodeTree {
     private List<List<Integer>> codes;
 
     public CodeTree(InternalNode root, int symbolLimit) {
-        this.root = Objects.requireNonNull(root);
+        this.root = root;
 
-        codes = new ArrayList<List<Integer>>();
+        codes = new ArrayList<List<Integer>>(); // ArrayList<ArrayList<Integer>>
         //add 257 nulls to list
         for (int i = 0; i < symbolLimit; i++) {
             codes.add(null);
@@ -43,21 +43,20 @@ public class CodeTree {
                     new InternalNode(x.node, y.node),
                     Math.min(x.lowestSymbol, y.lowestSymbol),
                     x.frequency + y.frequency));
+//            System.out.println("x"+x.lowestSymbol);
+//            System.out.println("y"+y.lowestSymbol);
         }
-        /**
-         * CIA BAIGEM
-         */
 
         //Remaining node
         InternalNode node_ = (InternalNode)pqueue.remove().node;//Root
-        CodeTree code = new CodeTree(node_, freqs.frequencies.length); //frequencies.length = 257, max symbols
+        CodeTree code = new CodeTree(node_, freqs.frequencies.length); //freqs.frequencies.length = 257, max symbols
 
         return code;
     }
 
     private void buildCodeList(Node node, List<Integer> prefix) {
         if (node instanceof InternalNode) {
-            InternalNode internalNode = (InternalNode) node;
+            InternalNode internalNode = (InternalNode) node; //cast because Node class is abstract
 
             prefix.add(0);
             buildCodeList(internalNode.leftChild, prefix);
@@ -78,9 +77,20 @@ public class CodeTree {
 //            }
 
             codes.set(leaf.symbol, new ArrayList<Integer>(prefix));
+            System.out.println("leaf.symbol: "+leaf.symbol);
+            System.out.println("prefix: "+prefix);
 
         } else {
             System.out.println("Error");
         }
+    }
+
+    public List<Integer> getCode(int symbol) {
+        if (symbol < 0)
+            throw new IllegalArgumentException("Illegal symbol");
+        else if (codes.get(symbol) == null)
+            throw new IllegalArgumentException("No code for given symbol");
+        else
+            return codes.get(symbol);
     }
 }
