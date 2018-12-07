@@ -5,9 +5,7 @@ public class CodeTree {
     private List<List<Integer>> codes;
 
     public CodeTree(InternalNode root, int symbolLimit) {
-        //this.root = Objects.requireNonNull(root);
-        Objects.requireNonNull(root, "Root must not be null");
-        this.root = root;
+        this.root = Objects.requireNonNull(root);
 
         codes = new ArrayList<List<Integer>>();
         //add 257 nulls to list
@@ -50,9 +48,9 @@ public class CodeTree {
          * CIA BAIGEM
          */
 
-        //Likus vienam lapui, kuris turi didziausia dazni, jis padaromas saknimi
-        InternalNode last_node = (InternalNode)pqueue.remove().node;//Root
-        CodeTree code = new CodeTree(last_node, freqs.frequencies.length); //freqs.frequencies.length = 257, max symbols
+        //Remaining node
+        InternalNode node_ = (InternalNode)pqueue.remove().node;//Root
+        CodeTree code = new CodeTree(node_, freqs.frequencies.length); //frequencies.length = 257, max symbols
 
         return code;
     }
