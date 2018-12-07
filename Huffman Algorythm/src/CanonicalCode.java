@@ -99,4 +99,47 @@ public final class CanonicalCode {
         return result;
     }
 
+
+    //DECOMPRESS
+    public CanonicalCode(int[] codeLens) {
+        // Check basic validity
+        Objects.requireNonNull(codeLens);
+        if (codeLens.length < 2)
+            throw new IllegalArgumentException("At least 2 symbols needed");
+        for (int cl : codeLens) {
+            if (cl < 0)
+                throw new IllegalArgumentException("Illegal code length");
+        }
+
+        // Copy once and check for tree validity
+        codeLengths = codeLens.clone();
+        Arrays.sort(codeLengths);
+        int currentLevel = codeLengths[codeLengths.length - 1];
+        int numNodesAtLevel = 0;
+        for (int i = codeLengths.length - 1; i >= 0 && codeLengths[i] > 0; i--) {
+            int cl = codeLengths[i];
+            while (cl < currentLevel) {
+                if (numNodesAtLevel % 2 != 0)
+                    throw new IllegalArgumentException("Under-full Huffman code tree");
+                numNodesAtLevel /= 2;
+                currentLevel--;
+            }
+            numNodesAtLevel++;
+        }
+        while (currentLevel > 0) {
+            if (numNodesAtLevel % 2 != 0)
+                throw new IllegalArgumentException("Under-full Huffman code tree");
+            numNodesAtLevel /= 2;
+            currentLevel--;
+        }
+        if (numNodesAtLevel < 1)
+            throw new IllegalArgumentException("Under-full Huffman code tree");
+        if (numNodesAtLevel > 1)
+            throw new IllegalArgumentException("Over-full Huffman code tree");
+
+        // Copy again
+        System.arraycopy(codeLens, 0, codeLengths, 0, codeLens.length);
+    }
+
+
 }
