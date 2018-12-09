@@ -3,6 +3,7 @@ import java.util.ArrayList;
 
 public class HuffmanCompress {
     public static int symbolLimit;
+    public static int bytes;
 
     public static void main(String[] args) throws IOException {
 
@@ -15,7 +16,7 @@ public class HuffmanCompress {
         }
 
         try {
-            int bytes = Integer.valueOf(args[0]);
+            bytes = Integer.valueOf(args[0]);
             symbolLimit = (int)Math.pow(2,bytes);
             //System.out.println(symbolLimit);
             File inputFile = new File(args[1]);
@@ -50,12 +51,12 @@ public class HuffmanCompress {
 
 
     static void writeCodeLengthTable(BitOutputStream out, CanonicalCode canonCode) throws IOException {
-        for (int i = 0; i < 257; i++) {
+        for (int i = 0; i < symbolLimit+1; i++) {
             int val = canonCode.getCodeLength(i);
             //System.out.println("val: " + val);
 
             // Write value as 8 bits in big endian
-            for (int j = 7; j >= 0; j--) {
+            for (int j = bytes-1; j >= 0; j--) {
                 out.write((val >>> j) & 1); //Pasiimamas tik vienas bitas ir irasomas. Ima tik po viena bita is val
                 //System.out.println("Bit: "+((val >>> j) & 1));
             }
@@ -73,7 +74,7 @@ public class HuffmanCompress {
             enc.write(b);
             //System.out.println("b: "+b);
         }
-        enc.write(256);  // EOF
+        enc.write(symbolLimit);  // EOF
     }
 
     }

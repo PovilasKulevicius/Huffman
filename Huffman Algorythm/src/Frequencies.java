@@ -1,5 +1,6 @@
 import java.io.*;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 public class Frequencies {
 
@@ -11,9 +12,8 @@ public class Frequencies {
         InputStream input = new BufferedInputStream(new FileInputStream(file));//Atsidaromas failas binariniam nuskaitymui
 
         while (true) {
-            byte[] arr = new byte[bytes];
-            int b = input.read(arr,0,bytes );//Nuskaitoma po 8 bitus, kuri atitinka ASCII kodu reiksmes
-            //System.out.println(b);
+            //byte[] arr = new byte[bytes];
+            int b = input.read();//Nuskaitoma po 8 bitus, kuri atitinka ASCII kodu reiksmes
             if (b == -1) { //Kai pasiekiama failo pabaiga
                 break;
             }

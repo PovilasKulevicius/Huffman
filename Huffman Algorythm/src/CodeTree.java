@@ -8,7 +8,6 @@ public class CodeTree {
         this.root = root; //nukopijuojama saknis
 
         codes = new ArrayList<List<Integer>>(); // ArrayList<ArrayList<Integer>>
-        //add 257 nulls to list
         //atsilaisvinama vietos
         for (int i = 0; i < symbolLimit; i++) {
             codes.add(null);
@@ -90,10 +89,13 @@ public class CodeTree {
     }
 
     public List<Integer> getCode(int symbol) {
+        System.out.println(codes.get(symbol));
         if (symbol < 0)
             throw new IllegalArgumentException("Illegal symbol");
-        else if (codes.get(symbol) == null)
+        else if (codes.get(symbol) == null) {
+            System.out.println(codes.get(symbol));
             throw new IllegalArgumentException("No code for given symbol");
+        }
         else
             return codes.get(symbol);
     }
