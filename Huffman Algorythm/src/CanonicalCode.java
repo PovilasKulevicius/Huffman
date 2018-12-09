@@ -5,51 +5,31 @@ import java.util.Objects;
 
 public final class CanonicalCode {
 
-    private int symbolLimit = 257;
-    private int[] codeLengths;
+    private int symbolLimit = HuffmanCompress.symbolLimit+1;
+    private int[] codeLengths =  new int[symbolLimit];
 
     public CanonicalCode(CodeTree tree) {
-        //Objects.requireNonNull(tree);
-//        if (symbolLimit < 2)
-//            throw new IllegalArgumentException("At least 2 symbols needed");
-        codeLengths = new int[symbolLimit];
         buildCodeLengths(tree.root, 0);
     }
 
 
     // Recursive helper method for the above constructor.
-    private void buildCodeLengths(Node node, int depth) {
+    private void buildCodeLengths(Node node, int depth) { //Rekursyviai ieskoma medzio kiekvienos reiksmes gylio
         if (node instanceof InternalNode) {
-            InternalNode internalNode = (InternalNode)node;
-            buildCodeLengths(internalNode.leftChild , depth + 1);
-            buildCodeLengths(internalNode.rightChild, depth + 1);
+            InternalNode internalNode = (InternalNode)node; //node casting to internalnode
+            buildCodeLengths(internalNode.leftChild , depth + 1);//Einama i kaire puse. Prie gylio pridedamas 1
+            buildCodeLengths(internalNode.rightChild, depth + 1);//Einama i desine puse. Prie gylio pridedamas 1
         } else if (node instanceof Leaf) {
-            int symbol = ((Leaf)node).symbol;
-//            if (symbol >= codeLengths.length)
-//                throw new IllegalArgumentException("Symbol exceeds symbol limit");
-//            // Note: CodeTree already has a checked constraint that disallows a symbol in multiple leaves
-//            if (codeLengths[symbol] != 0)
-//                throw new AssertionError("Symbol has more than one code");
-            codeLengths[symbol] = depth;
+            int symbol = ((Leaf)node).symbol; //Gaunamas to lapo, iki kurio atkeliavom, reiksme
+            codeLengths[symbol] = depth; //Priskiriamas gylis reiksmei
         } else {
-            System.out.println("Error. Node is nor a leaf nor an internalNode");
+            System.out.println("Error. Node is nor a leaf nor a internalNode");
         }
     }
 
 
 
     /*---- Various methods ----*/
-
-    /**
-     * Returns the symbol limit for this canonical Huffman code.
-     * Thus this code covers symbol values from 0 to symbolLimit&minus;1.
-     * @return the symbol limit, which is at least 2
-     */
-    public int getSymbolLimit() {
-        return codeLengths.length;
-    }
-
-
     /**
      * Returns the code length of the specified symbol value. The result is 0
      * if the symbol has node code; otherwise the result is a positive number.

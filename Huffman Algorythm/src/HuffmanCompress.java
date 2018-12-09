@@ -2,31 +2,35 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class HuffmanCompress {
+    public static int symbolLimit;
 
     public static void main(String[] args) throws IOException {
 
 
         //Required two files: input and output
-        if (args.length != 2) {
-            System.out.println("Error: files not specified");
+        if (args.length != 3) {
+            System.out.println("Error: arguments not specified");
             System.exit(1);
             return;
         }
 
         try {
-            File inputFile = new File(args[0]);
-            File outputFile = new File(args[1]);
+            int bytes = Integer.valueOf(args[0]);
+            symbolLimit = (int)Math.pow(2,bytes);
+            //System.out.println(symbolLimit);
+            File inputFile = new File(args[1]);
+            File outputFile = new File(args[2]);
 
-            Frequencies freqs = Frequencies.getFrequencies(inputFile);
-            freqs.increment(256);
+            Frequencies freqs = Frequencies.getFrequencies(inputFile, bytes);//Gaunami faile esanciu simboliu dazniai
+            freqs.increment(symbolLimit);//symbolLimit - EOF, pridedamas EOF prie dazniu lenteles
 
             //freqs.printFreqs();
 
 
-            CodeTree code = CodeTree.buildCodeTree(freqs);
+            CodeTree code = CodeTree.buildCodeTree(freqs); //Sudaromas kodu medis
 
 
-            //System.out.println("length: "+freqs.frequencies.length);
+            System.out.println("length: "+freqs.frequencies.length);
             CanonicalCode canonCode = new CanonicalCode(code);
             code = canonCode.toCodeTree();
 

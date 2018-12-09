@@ -1,4 +1,3 @@
-import java.util.Objects;
 
 public final class InternalNode extends Node {
 
@@ -9,8 +8,8 @@ public final class InternalNode extends Node {
 
 
     public InternalNode(Node left, Node right) {
-        leftChild = Objects.requireNonNull(left);
-        rightChild = Objects.requireNonNull(right);
+        leftChild = left;
+        rightChild = right;
     }
 
 }

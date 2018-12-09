@@ -5,10 +5,11 @@ public class CodeTree {
     private List<List<Integer>> codes;
 
     public CodeTree(InternalNode root, int symbolLimit) {
-        this.root = root;
+        this.root = root; //nukopijuojama saknis
 
         codes = new ArrayList<List<Integer>>(); // ArrayList<ArrayList<Integer>>
         //add 257 nulls to list
+        //atsilaisvinama vietos
         for (int i = 0; i < symbolLimit; i++) {
             codes.add(null);
         }
@@ -20,10 +21,10 @@ public class CodeTree {
 
         Queue<NodeWithFrequency> pqueue = new PriorityQueue<NodeWithFrequency>();
 
-        // Add leaves for symbols with non-zero frequency
+        // Sukuriami lapai ne nulinems reiksmems turintiems dazniams
         for (int i = 0; i < freqs.frequencies.length; i++) {
             if (freqs.frequencies[i] > 0)
-                pqueue.add(new NodeWithFrequency(new Leaf(i), i, freqs.frequencies[i]));
+                pqueue.add(new NodeWithFrequency(new Leaf(i), i, freqs.frequencies[i]));//Sukuriamas lapas
         }
 //**************************************************************************************
          //Apsauga. Turi buti bent du lapai
@@ -31,40 +32,43 @@ public class CodeTree {
             //System.out.println("TEST1");
             if (freqs.frequencies[i] == 0)
                 //System.out.println("TEST2");
-                pqueue.add(new NodeWithFrequency(new Leaf(i), i, 0));
+                pqueue.add(new NodeWithFrequency(new Leaf(i), i, 0));//Pridedamas lapas su nulio danznius, jeigu egzistuoja maziau nei du lapai
         }
 //*******************************************************************************
 
         // Repeatedly tie together two nodes with the lowest frequency
-        while (pqueue.size() > 1) {
+        while (pqueue.size() > 1) {//while vyksta iki tol, kol lieka vienas vidinis node su didziausiu dazniu
+            //Pasiemami du lapai su maziausiais dazniais
             NodeWithFrequency x = pqueue.remove();
             NodeWithFrequency y = pqueue.remove();
+            //Lapai sujungiami i vidini node
             pqueue.add(new NodeWithFrequency(
-                    new InternalNode(x.node, y.node),
-                    Math.min(x.lowestSymbol, y.lowestSymbol),
-                    x.frequency + y.frequency));
-//            System.out.println("x"+x.lowestSymbol);
-//            System.out.println("y"+y.lowestSymbol);
+                    new InternalNode(x.node, y.node),//Paduodami left ir right vaikai
+                    Math.min(x.lowestSymbol, y.lowestSymbol),//Pasiemama mazense ASCII reiksme
+                    x.frequency + y.frequency));//Dazniai sudedami
+//            System.out.println("x: "+x.lowestSymbol);
+//            System.out.println("y: "+y.lowestSymbol);
         }
 
         //Remaining node
         InternalNode node_ = (InternalNode)pqueue.remove().node;//Root
-        CodeTree code = new CodeTree(node_, freqs.frequencies.length); //freqs.frequencies.length = 257, max symbols
+        CodeTree code = new CodeTree(node_, freqs.frequencies.length); //Sudaromai simboliu kodai
 
         return code;
     }
 
+    //Funkicija sudaro kodus rekursyviai eidama gilyn.
     private void buildCodeList(Node node, List<Integer> prefix) {
         if (node instanceof InternalNode) {
             InternalNode internalNode = (InternalNode) node; //cast because Node class is abstract
 
-            prefix.add(0);
-            buildCodeList(internalNode.leftChild, prefix);
-            prefix.remove(prefix.size() - 1);
+            prefix.add(0);//prie kodo pridedamas 0
+            buildCodeList(internalNode.leftChild, prefix);//Einama i kaire
+            prefix.remove(prefix.size() - 1);//Pasiekus lapa, einama vienu zingsniu atgal
 
-            prefix.add(1);
-            buildCodeList(internalNode.rightChild, prefix);
-            prefix.remove(prefix.size() - 1);
+            prefix.add(1);//prie kodo pridedamas 1
+            buildCodeList(internalNode.rightChild, prefix);//Einama i desine
+            prefix.remove(prefix.size() - 1);//pasiekus lapa, einama vienu zingsniu atgal
 
         } else if (node instanceof Leaf) {
             Leaf leaf = (Leaf) node;
@@ -76,7 +80,7 @@ public class CodeTree {
 //                throw new IllegalArgumentException("Symbol has more than one code");
 //            }
 
-            codes.set(leaf.symbol, new ArrayList<Integer>(prefix));
+            codes.set(leaf.symbol, new ArrayList<Integer>(prefix));//Pasiekus lapa, irasomas to simbolio kodas
             //System.out.println("leaf.symbol: "+leaf.symbol);
             //System.out.println("prefix: "+prefix);
 
