@@ -6,14 +6,22 @@ public class Frequencies {
 
     public int[] frequencies = new int[HuffmanCompress.symbolLimit+1];
 
-    public static Frequencies getFrequencies(File file, int bytes) throws IOException {
+    public static Frequencies getFrequencies(File file, int bits) throws IOException {
 
         Frequencies freqs = new Frequencies();
         InputStream input = new BufferedInputStream(new FileInputStream(file));//Atsidaromas failas binariniam nuskaitymui
 
         while (true) {
-            //byte[] arr = new byte[bytes];
+            byte[] arr = new byte[bits];
+            int val = 0;
             int b = input.read();//Nuskaitoma po 8 bitus, kuri atitinka ASCII kodu reiksmes
+            //System.out.println(b);
+            //val - bitai
+            for (int i = bits; i > 0; i--){
+                val = getBit(b,i-1);
+                System.out.println(val);
+            }
+
             if (b == -1) { //Kai pasiekiama failo pabaiga
                 break;
             }
@@ -40,6 +48,9 @@ public class Frequencies {
 
     }
 
+    static int getBit(int n, int k) {
+        return (n >> k) & 1;
+    }
 
 }
 

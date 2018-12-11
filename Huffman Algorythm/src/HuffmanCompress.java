@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public class HuffmanCompress {
     public static int symbolLimit;
-    public static int bytes;
+    public static int bits;
 
     public static void main(String[] args) throws IOException {
 
@@ -13,16 +13,19 @@ public class HuffmanCompress {
             System.out.println("Error: arguments not specified");
             System.exit(1);
             return;
+        } else if(Integer.valueOf(args[0]) > 24){
+            System.out.println("Error: word too long");
+            System.exit(1);
         }
 
         try {
-            bytes = Integer.valueOf(args[0]);
-            symbolLimit = (int)Math.pow(2,bytes);
+            bits = Integer.valueOf(args[0]);
+            symbolLimit = (int)Math.pow(2,bits);
             //System.out.println(symbolLimit);
             File inputFile = new File(args[1]);
             File outputFile = new File(args[2]);
 
-            Frequencies freqs = Frequencies.getFrequencies(inputFile, bytes);//Gaunami faile esanciu simboliu dazniai
+            Frequencies freqs = Frequencies.getFrequencies(inputFile, bits);//Gaunami faile esanciu simboliu dazniai
             freqs.increment(symbolLimit);//symbolLimit - EOF, pridedamas EOF prie dazniu lenteles
 
             //freqs.printFreqs();
@@ -56,7 +59,7 @@ public class HuffmanCompress {
             //System.out.println("val: " + val);
 
             // Write value as 8 bits in big endian
-            for (int j = bytes-1; j >= 0; j--) {
+            for (int j = bits-1; j >= 0; j--) {
                 out.write((val >>> j) & 1); //Pasiimamas tik vienas bitas ir irasomas. Ima tik po viena bita is val
                 //System.out.println("Bit: "+((val >>> j) & 1));
             }
