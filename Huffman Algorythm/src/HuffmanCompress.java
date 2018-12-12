@@ -7,7 +7,7 @@ public class HuffmanCompress {
 
     public static void main(String[] args) throws IOException {
 
-
+        System.out.println(args[0] + " " + args[1] + " " + args[2]);
         //Required two files: input and output
         if (args.length != 3) {
             System.out.println("Error: arguments not specified");
@@ -35,11 +35,11 @@ public class HuffmanCompress {
 
 
             System.out.println("length: "+freqs.frequencies.length);
-            CanonicalCode canonCode = new CanonicalCode(code);
+            CanonicalCode canonCode = new CanonicalCode(code); //suskaiciuoja simboliu gylius
             code = canonCode.toCodeTree();
 
 
-            try (InputStream in = new BufferedInputStream(new FileInputStream(inputFile))) {
+            try (BitInputStream in = new BitInputStream(new BufferedInputStream(new FileInputStream(inputFile)))) {
                 try (BitOutputStream out = new BitOutputStream(new BufferedOutputStream(new FileOutputStream(outputFile)))) {
                     writeCodeLengthTable(out, canonCode);
                     compress(code, in, out);
@@ -51,7 +51,6 @@ public class HuffmanCompress {
             e.printStackTrace();
         }
     }
-
 
     static void writeCodeLengthTable(BitOutputStream out, CanonicalCode canonCode) throws IOException {
         for (int i = 0; i < symbolLimit+1; i++) {
@@ -66,18 +65,25 @@ public class HuffmanCompress {
         }
     }
 
-    static void compress(CodeTree code, InputStream in, BitOutputStream out) throws IOException {
+    static void compress(CodeTree code, BitInputStream in, BitOutputStream out) throws IOException {
         HuffmanEncoder enc = new HuffmanEncoder(out);
         enc.codeTree = code;
         while (true) {
-            int b = in.read();
+        int bit = 0;
+            int val = 0;
+            for (int j = 0; j < bits; j++){
+                bit = in.read();
+                if(bit == -1)break;
+                val = (val << 1) | bit;
+            }
             //System.out.println("b: "+b);
-            if (b == -1)
+            if (bit == -1)
                 break;
-            enc.write(b);
+            enc.write(val);
             //System.out.println("b: "+b);
         }
         enc.write(symbolLimit);  // EOF
-    }
 
     }
+
+}

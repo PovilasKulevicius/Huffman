@@ -45,8 +45,8 @@ public class CodeTree {
                     new InternalNode(x.node, y.node),//Paduodami left ir right vaikai
                     Math.min(x.lowestSymbol, y.lowestSymbol),//Pasiemama mazense ASCII reiksme
                     x.frequency + y.frequency));//Dazniai sudedami
-//            System.out.println("x: "+x.lowestSymbol);
-//            System.out.println("y: "+y.lowestSymbol);
+            //System.out.println("x: "+x.lowestSymbol);
+            //System.out.println("y: "+y.lowestSymbol);
         }
 
         //Remaining node
@@ -72,13 +72,13 @@ public class CodeTree {
         } else if (node instanceof Leaf) {
             Leaf leaf = (Leaf) node;
 
-//            if (leaf.symbol >= codes.size()) {
-//                throw new IllegalArgumentException("Symbol exceeds symbol limit");
-//            }
-//            if (codes.get(leaf.symbol) != null) {
-//                throw new IllegalArgumentException("Symbol has more than one code");
-//            }
-
+            if (leaf.symbol >= codes.size()) {
+                throw new IllegalArgumentException("Symbol exceeds symbol limit");
+            }
+            if (codes.get(leaf.symbol) != null) {
+                throw new IllegalArgumentException("Symbol has more than one code");
+            }
+            //System.out.println(prefix);
             codes.set(leaf.symbol, new ArrayList<Integer>(prefix));//Pasiekus lapa, irasomas to simbolio kodas
             //System.out.println("leaf.symbol: "+leaf.symbol);
             //System.out.println("prefix: "+prefix);

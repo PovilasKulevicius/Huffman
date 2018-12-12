@@ -1,6 +1,7 @@
 import java.io.*;
 
 public final class HuffmanDecompress {
+    public static int bits = 10;
 
     // Command line main application function.
     public static void main(String[] args) throws IOException {
@@ -15,7 +16,7 @@ public final class HuffmanDecompress {
 
         // Perform file decompression
         try (BitInputStream in = new BitInputStream(new BufferedInputStream(new FileInputStream(inputFile)))) {
-            try (OutputStream out = new BufferedOutputStream(new FileOutputStream(outputFile))) {
+            try (BitOutputStream out =new BitOutputStream (new BufferedOutputStream(new FileOutputStream(outputFile)))) {
                 CanonicalCode canonCode = readCodeLengthTable(in);
                 CodeTree code = canonCode.toCodeTree();
                 decompress(code, in, out);
@@ -26,11 +27,11 @@ public final class HuffmanDecompress {
 
     // To allow unit testing, this method is package-private instead of private.
     static CanonicalCode readCodeLengthTable(BitInputStream in) throws IOException {
-        int[] codeLengths = new int[257];
+        int[] codeLengths = new int[(int)Math.pow(2,bits)+1];
         for (int i = 0; i < codeLengths.length; i++) {
             // For this file format, we read 8 bits in big endian
             int val = 0;
-            for (int j = 0; j < 8; j++)
+            for (int j = 0; j < bits; j++)
                 val = (val << 1) | in.readNoEof();
             codeLengths[i] = val;
         }
@@ -39,14 +40,20 @@ public final class HuffmanDecompress {
 
 
     // To allow unit testing, this method is package-private instead of private.
-    static void decompress(CodeTree code, BitInputStream in, OutputStream out) throws IOException {
+    static void decompress(CodeTree code, BitInputStream in, BitOutputStream out) throws IOException {
         HuffmanDecoder dec = new HuffmanDecoder(in);
+        HuffmanEncoder enc = new HuffmanEncoder(out);
         dec.codeTree = code;
         while (true) {
             int symbol = dec.read();
-            if (symbol == 256)  // EOF symbol
+            if (symbol == (int)Math.pow(2,bits))  // EOF symbol
                 break;
-            out.write(symbol);
+
+            for (int j = bits-1; j >= 0; j--) {
+                out.write((symbol >>> j) & 1); //Pasiimamas tik vienas bitas ir irasomas. Ima tik po viena bita is val
+                //System.out.println("Bit: "+((val >>> j) & 1));
+            }
+            //out.write(symbol);
         }
     }
 
