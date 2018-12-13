@@ -20,26 +20,34 @@ public class HuffmanCompress {
 //            System.out.println("Error: word too long");
 //            System.exit(1);
 //        }
-
+        String inputFileName = "";
+        String outputFileName = "";
         try {
-            Scanner c = new Scanner(System.in);
-            System.out.println("Įveskite žodžio ilgį");
-            bits = c.nextInt();
-            if (bits > 24){
-                System.out.println("Error: word too long: ");
-                System.exit(1);
+            // FOR TESTING
+            if(args.length == 3){
+                bits = Integer.valueOf(args[0]);
+                inputFileName = args[1];
+                outputFileName = args[2];
             }
-            System.out.println("Įveskite nuskaotomą failą: ");
-            String inputfile = c.next();
-            System.out.println("Įveskite failą į kurį bus įrašomas suspaustas kodas: ");
-            String outputfile = c.next();
-            c.close();
-
+            else {
+                Scanner c = new Scanner(System.in);
+                System.out.println("Įveskite žodžio ilgį");
+                bits = c.nextInt();
+                if (bits > 24) {
+                    System.out.println("Error: word too long: ");
+                    System.exit(1);
+                }
+                System.out.println("Įveskite nuskaitomą failą: ");
+                inputFileName = c.next();
+                System.out.println("Įveskite failą į kurį bus įrašomas suspaustas kodas: ");
+                outputFileName = c.next();
+                c.close();
+            }
 
             symbolLimit = (int)Math.pow(2,bits);
             //System.out.println(symbolLimit);
-            File inputFile = new File(inputfile);
-            File outputFile = new File(outputfile);
+            File inputFile = new File(inputFileName);
+            File outputFile = new File(outputFileName);
 
             Frequencies freqs = Frequencies.getFrequencies(inputFile, bits);//Gaunami faile esanciu simboliu dazniai
             freqs.increment(symbolLimit);//symbolLimit - EOF, pridedamas EOF prie dazniu lenteles
@@ -57,6 +65,7 @@ public class HuffmanCompress {
 
             try (BitInputStream in = new BitInputStream(new BufferedInputStream(new FileInputStream(inputFile)))) {
                 try (BitOutputStream out = new BitOutputStream(new BufferedOutputStream(new FileOutputStream(outputFile)))) {
+                    writeFirstByte(bits, out);
                     writeCodeLengthTable(out, canonCode);
                     compress(code, in, out);
                 }
@@ -91,7 +100,6 @@ public class HuffmanCompress {
 
                 bit = in.read();
                 if(bit == -1) {
-                    System.out.println("cancer");
                     break;
                 }
                 val = (val << 1) | bit;
@@ -104,7 +112,11 @@ public class HuffmanCompress {
             //System.out.println("b: "+b);
         }
         enc.write(symbolLimit);  // EOF
-
     }
-
+    static public void writeFirstByte(int val, BitOutputStream out)throws IOException{
+        for (int j = 8-1; j >= 0; j--) {
+            out.write((val >>> j) & 1); //Pasiimamas tik vienas bitas ir irasomas. Ima tik po viena bita is val
+            //System.out.println("Bit: "+((val >>> j) & 1));
+        }
+    }
 }

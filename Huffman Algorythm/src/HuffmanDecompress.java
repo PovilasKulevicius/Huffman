@@ -1,22 +1,38 @@
 import java.io.*;
+import java.util.Scanner;
 
 public final class HuffmanDecompress {
-    public static int bits = 2;
+    public static int bits;
 
     // Command line main application function.
     public static void main(String[] args) throws IOException {
-        // Handle command line arguments
-        if (args.length != 2) {
-            System.err.println("Usage: java HuffmanDecompress InputFile OutputFile");
-            System.exit(1);
-            return;
+        String inputFileName = "";
+        String outputFileName = "";
+        if(args.length == 2){
+            inputFileName = args[0];
+            outputFileName = args[1];
         }
-        File inputFile  = new File(args[0]);
-        File outputFile = new File(args[1]);
+        else {
+            Scanner c = new Scanner(System.in);
+            System.out.println("Įveskite dekoduojamą failą: ");
+            String inputfile = c.next();
+            System.out.println("Įveskite failą į kurį bus atspaustas kodas: ");
+            String outputfile = c.next();
+            c.close();
+            // Handle command line arguments
+//        if (args.length != 2) {
+//            System.err.println("Usage: java HuffmanDecompress InputFile OutputFile");
+//            System.exit(1);
+//            return;
+//        }
+        }
+        File inputFile  = new File(inputFileName);
+        File outputFile = new File(outputFileName);
 
         // Perform file decompression
         try (BitInputStream in = new BitInputStream(new BufferedInputStream(new FileInputStream(inputFile)))) {
             try (BitOutputStream out =new BitOutputStream (new BufferedOutputStream(new FileOutputStream(outputFile)))) {
+                bits = readFirstByte(in);
                 CanonicalCode canonCode = readCodeLengthTable(in);
                 CodeTree code = canonCode.toCodeTree();
                 decompress(code, in, out);
@@ -56,5 +72,10 @@ public final class HuffmanDecompress {
             //out.write(symbol);
         }
     }
-
+    static public int readFirstByte(BitInputStream in)throws IOException{
+        int val = 0;
+        for (int j = 0; j < 8; j++)
+            val = (val << 1) | in.readNoEof();
+        return val;
+    }
 }
