@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class HuffmanCompress {
     public static int symbolLimit;
@@ -7,23 +8,38 @@ public class HuffmanCompress {
 
     public static void main(String[] args) throws IOException {
 
-        System.out.println(args[0] + " " + args[1] + " " + args[2]);
-        //Required two files: input and output
-        if (args.length != 3) {
-            System.out.println("Error: arguments not specified");
-            System.exit(1);
-            return;
-        } else if(Integer.valueOf(args[0]) > 24){
-            System.out.println("Error: word too long");
-            System.exit(1);
-        }
+
+
+//        System.out.println(args[0] + " " + args[1] + " " + args[2]);
+//        //Required two files: input and output
+//        if (args.length != 3) {
+//            System.out.println("Error: arguments not specified");
+//            System.exit(1);
+//            return;
+//        } else if(Integer.valueOf(args[0]) > 24){
+//            System.out.println("Error: word too long");
+//            System.exit(1);
+//        }
 
         try {
-            bits = Integer.valueOf(args[0]);
+            Scanner c = new Scanner(System.in);
+            System.out.println("Įveskite žodžio ilgį");
+            bits = c.nextInt();
+            if (bits > 24){
+                System.out.println("Error: word too long: ");
+                System.exit(1);
+            }
+            System.out.println("Įveskite nuskaotomą failą: ");
+            String inputfile = c.next();
+            System.out.println("Įveskite failą į kurį bus įrašomas suspaustas kodas: ");
+            String outputfile = c.next();
+            c.close();
+
+
             symbolLimit = (int)Math.pow(2,bits);
             //System.out.println(symbolLimit);
-            File inputFile = new File(args[1]);
-            File outputFile = new File(args[2]);
+            File inputFile = new File(inputfile);
+            File outputFile = new File(outputfile);
 
             Frequencies freqs = Frequencies.getFrequencies(inputFile, bits);//Gaunami faile esanciu simboliu dazniai
             freqs.increment(symbolLimit);//symbolLimit - EOF, pridedamas EOF prie dazniu lenteles
@@ -69,13 +85,18 @@ public class HuffmanCompress {
         HuffmanEncoder enc = new HuffmanEncoder(out);
         enc.codeTree = code;
         while (true) {
-        int bit = 0;
+            int bit = 0;
             int val = 0;
             for (int j = 0; j < bits; j++){
+
                 bit = in.read();
-                if(bit == -1)break;
+                if(bit == -1) {
+                    System.out.println("cancer");
+                    break;
+                }
                 val = (val << 1) | bit;
             }
+
             //System.out.println("b: "+b);
             if (bit == -1)
                 break;

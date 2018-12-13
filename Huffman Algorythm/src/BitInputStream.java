@@ -49,12 +49,16 @@ public final class BitInputStream implements AutoCloseable {
      * @throws IOException if an I/O exception occurred
      */
     public int read() throws IOException {
-        if (currentByte == -1)
+        if (currentByte == -1) {
+            System.out.println("PABAIGA");
             return -1;
+        }
         if (numBitsRemaining == 0) {
             currentByte = input.read();
-            if (currentByte == -1)
+            if (currentByte == -1) {
+                System.out.println("PABAIGA");
                 return -1;
+            }
             numBitsRemaining = 8;
         }
         if (numBitsRemaining <= 0)

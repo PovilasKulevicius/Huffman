@@ -11,15 +11,17 @@ public class Frequencies {
         Frequencies freqs = new Frequencies();
         BitInputStream input = new BitInputStream(new BufferedInputStream(new FileInputStream(file)));//Atsidaromas failas binariniam nuskaitymui
 
-        for (int i = 0; i < freqs.frequencies.length; i++) {
+        while(true){
             // For this file format, we read 8 bits in big endian
+            int bit = 0;
             int val = 0;
             for (int j = 0; j < bits; j++){
-                int bit = input.read();
+                bit = input.read();
                 if(bit == -1)break;
                 val = (val << 1) | bit;
             }
-            System.out.println(val);
+            if(bit == -1)break;
+            //System.out.println(val);
             freqs.increment(val);
         }
         System.out.println("*****");

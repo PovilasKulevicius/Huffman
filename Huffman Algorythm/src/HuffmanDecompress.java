@@ -1,7 +1,7 @@
 import java.io.*;
 
 public final class HuffmanDecompress {
-    public static int bits = 10;
+    public static int bits = 2;
 
     // Command line main application function.
     public static void main(String[] args) throws IOException {

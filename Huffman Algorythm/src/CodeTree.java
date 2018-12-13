@@ -89,11 +89,10 @@ public class CodeTree {
     }
 
     public List<Integer> getCode(int symbol) {
-        System.out.println(codes.get(symbol));
         if (symbol < 0)
             throw new IllegalArgumentException("Illegal symbol");
         else if (codes.get(symbol) == null) {
-            System.out.println(codes.get(symbol));
+            System.out.println(Integer.toString(symbol) + codes.get(symbol));
             throw new IllegalArgumentException("No code for given symbol");
         }
         else
