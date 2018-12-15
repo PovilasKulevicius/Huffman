@@ -12,13 +12,13 @@ public class Testing {
         String[] compress = new String[3];
         String[] decompress = new String[2];
 
-        String fileName = "test.txt";
+        String fileName = "pav.jpg";
         Path path = Paths.get("C:/Users/Tomas/IdeaProjects/Huffman", fileName);
         byte[] f1 = Files.readAllBytes(path);
         compress[1] = fileName;
-        for(int k = 3; k < 25; ++k){
+        for(int k = 5; k < 24; ++k){
             String compressedName = "compressed" + Integer.toString(k);
-            String decompressedName = "decompressed" + Integer.toString(k) + ".txt";
+            String decompressedName = "decompressed" + Integer.toString(k) + ".jpg";
 
             compress[0] = Integer.toString(k);
             compress[2] = compressedName;

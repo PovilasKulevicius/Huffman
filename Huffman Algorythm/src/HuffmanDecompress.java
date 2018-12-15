@@ -33,9 +33,11 @@ public final class HuffmanDecompress {
         try (BitInputStream in = new BitInputStream(new BufferedInputStream(new FileInputStream(inputFile)))) {
             try (BitOutputStream out =new BitOutputStream (new BufferedOutputStream(new FileOutputStream(outputFile)))) {
                 bits = readFirstByte(in);
+                System.out.println("_________decompress_____");
                 CanonicalCode canonCode = readCodeLengthTable(in);
                 CodeTree code = canonCode.toCodeTree();
                 decompress(code, in, out);
+                System.out.println("dec end");
             }
         }
     }
@@ -58,24 +60,41 @@ public final class HuffmanDecompress {
     // To allow unit testing, this method is package-private instead of private.
     static void decompress(CodeTree code, BitInputStream in, BitOutputStream out) throws IOException {
         HuffmanDecoder dec = new HuffmanDecoder(in);
-        HuffmanEncoder enc = new HuffmanEncoder(out);
         dec.codeTree = code;
         while (true) {
             int symbol = dec.read();
-            if (symbol == (int)Math.pow(2,bits))  // EOF symbol
+            System.out.println("found " + symbol);
+            if (symbol == (int)Math.pow(2,bits)) {// EOF symbol
                 break;
-
+            }
+            System.out.println("written as");
             for (int j = bits-1; j >= 0; j--) {
                 out.write((symbol >>> j) & 1); //Pasiimamas tik vienas bitas ir irasomas. Ima tik po viena bita is val
                 //System.out.println("Bit: "+((val >>> j) & 1));
             }
             //out.write(symbol);
         }
+        System.out.println("writing remaining");
+        int bitsLeft = readFirstByte(in);
+        System.out.println("bits left" + bitsLeft);
+        writeRemaining(bitsLeft, in, out);
+        System.out.println("pab");
     }
     static public int readFirstByte(BitInputStream in)throws IOException{
         int val = 0;
         for (int j = 0; j < 8; j++)
             val = (val << 1) | in.readNoEof();
         return val;
+    }
+    static public void writeRemaining(int bitsLeft, BitInputStream in, BitOutputStream out) throws IOException {
+        int [] arr = new int [bitsLeft];
+        for(int k = 0; k<bitsLeft; ++k){
+            int bit = in.read();
+            arr[k] = bit;
+            if(bit == -1)break;
+        }
+        for(int k = bitsLeft-1; k>=0; k--){
+            out.write(arr[k]);
+        }
     }
 }

@@ -55,6 +55,7 @@ public final class HuffmanEncoder {
      */
     public void write(int symbol) throws IOException {
         List<Integer> bits = codeTree.getCode(symbol);
+        System.out.println(bits);
         for (int b : bits)
             output.write(b);
     }

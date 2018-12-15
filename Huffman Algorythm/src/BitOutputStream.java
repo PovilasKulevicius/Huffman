@@ -56,8 +56,7 @@ public final class BitOutputStream implements AutoCloseable {
      */
     public void write(int b) throws IOException {
         //Kodai pleciami i 8 bitus ir irasomi i faila
-//        System.out.println("b: " + b);
-//        System.out.println("currentByte1: " + currentByte);
+        //System.out.println("b: " + b);
         currentByte = (currentByte << 1) | b;
         //System.out.println("currentByte2: "+currentByte);
         numBitsFilled++;

@@ -20,8 +20,14 @@ public class Frequencies {
                 if(bit == -1)break;
                 val = (val << 1) | bit;
             }
-            if(bit == -1)break;
-            //System.out.println(val);
+            if(bit == -1){
+//                if(val > 0){
+//                    System.out.println("not full val freq " + val);
+//                    freqs.increment(val);
+//                }
+                break;
+            }
+            System.out.println(val);
             freqs.increment(val);
         }
         System.out.println("*****");

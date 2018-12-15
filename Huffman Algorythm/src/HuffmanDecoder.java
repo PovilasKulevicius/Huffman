@@ -37,13 +37,7 @@ public final class HuffmanDecoder {
 
     /*---- Method ----*/
 
-    /**
-     * Reads from the input stream to decode the next Huffman-coded symbol.
-     * @return the next symbol in the stream, which is non-negative
-     * @throws IOException if an I/O exception occurred
-     * @throws EOFException if the end of stream was reached before a symbol was decoded
-     * @throws NullPointerException if the current code tree is {@code null}
-     */
+
     public int read() throws IOException {
         if (codeTree == null)
             throw new NullPointerException("Code tree is null");
@@ -51,13 +45,15 @@ public final class HuffmanDecoder {
         InternalNode currentNode = codeTree.root;
         while (true) {
             int temp = input.readNoEof();
+            System.out.println(temp);
             Node nextNode;
             if      (temp == 0) nextNode = currentNode.leftChild;
             else if (temp == 1) nextNode = currentNode.rightChild;
             else throw new AssertionError("Invalid value from readNoEof()");
 
-            if (nextNode instanceof Leaf)
+            if (nextNode instanceof Leaf){
                 return ((Leaf)nextNode).symbol;
+            }
             else if (nextNode instanceof InternalNode)
                 currentNode = (InternalNode)nextNode;
             else

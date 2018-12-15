@@ -65,6 +65,7 @@ public class HuffmanCompress {
 
             try (BitInputStream in = new BitInputStream(new BufferedInputStream(new FileInputStream(inputFile)))) {
                 try (BitOutputStream out = new BitOutputStream(new BufferedOutputStream(new FileOutputStream(outputFile)))) {
+                    System.out.println("_________compress_____");
                     writeFirstByte(bits, out);
                     writeCodeLengthTable(out, canonCode);
                     compress(code, in, out);
@@ -93,25 +94,42 @@ public class HuffmanCompress {
     static void compress(CodeTree code, BitInputStream in, BitOutputStream out) throws IOException {
         HuffmanEncoder enc = new HuffmanEncoder(out);
         enc.codeTree = code;
+        int val = 0;
+        int bit = 0;
+        int count = 0;
         while (true) {
-            int bit = 0;
-            int val = 0;
+            val = 0;
+            bit = 0;
+            count = 0;
             for (int j = 0; j < bits; j++){
-
                 bit = in.read();
                 if(bit == -1) {
                     break;
                 }
+                count++;
                 val = (val << 1) | bit;
             }
 
-            //System.out.println("b: "+b);
             if (bit == -1)
+            {
                 break;
+            }
             enc.write(val);
-            //System.out.println("b: "+b);
+            System.out.println("val " + val);
         }
         enc.write(symbolLimit);  // EOF
+        writeFirstByte(count, out);
+
+        if(val > 0) {
+             //val = (val << 1) | 0;
+            System.out.println("not full val " + val);
+            for (int j = 0; j < count; j++){
+                out.write((val >>> j) & 1);
+            }
+        }
+
+        System.out.println("compression end");
+
     }
     static public void writeFirstByte(int val, BitOutputStream out)throws IOException{
         for (int j = 8-1; j >= 0; j--) {
