@@ -27,7 +27,7 @@ public class Frequencies {
 //                }
                 break;
             }
-            System.out.println(val);
+            //System.out.println(val);
             freqs.increment(val);
         }
         System.out.println("*****");

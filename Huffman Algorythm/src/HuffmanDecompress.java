@@ -63,11 +63,11 @@ public final class HuffmanDecompress {
         dec.codeTree = code;
         while (true) {
             int symbol = dec.read();
-            System.out.println("found " + symbol);
+            //System.out.println("found " + symbol);
             if (symbol == (int)Math.pow(2,bits)) {// EOF symbol
                 break;
             }
-            System.out.println("written as");
+            //System.out.println("written as");
             for (int j = bits-1; j >= 0; j--) {
                 out.write((symbol >>> j) & 1); //Pasiimamas tik vienas bitas ir irasomas. Ima tik po viena bita is val
                 //System.out.println("Bit: "+((val >>> j) & 1));

@@ -45,7 +45,7 @@ public final class HuffmanDecoder {
         InternalNode currentNode = codeTree.root;
         while (true) {
             int temp = input.readNoEof();
-            System.out.println(temp);
+            //System.out.println(temp);
             Node nextNode;
             if      (temp == 0) nextNode = currentNode.leftChild;
             else if (temp == 1) nextNode = currentNode.rightChild;

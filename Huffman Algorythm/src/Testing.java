@@ -16,7 +16,7 @@ public class Testing {
         Path path = Paths.get("C:/Users/Tomas/IdeaProjects/Huffman", fileName);
         byte[] f1 = Files.readAllBytes(path);
         compress[1] = fileName;
-        for(int k = 5; k < 24; ++k){
+        for(int k = 2; k < 24; ++k){
             String compressedName = "compressed" + Integer.toString(k);
             String decompressedName = "decompressed" + Integer.toString(k) + ".jpg";
 

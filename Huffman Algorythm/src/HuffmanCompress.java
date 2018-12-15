@@ -115,14 +115,14 @@ public class HuffmanCompress {
                 break;
             }
             enc.write(val);
-            System.out.println("val " + val);
+            //System.out.println("val " + val);
         }
         enc.write(symbolLimit);  // EOF
         writeFirstByte(count, out);
 
         if(val > 0) {
              //val = (val << 1) | 0;
-            System.out.println("not full val " + val);
+            //System.out.println("not full val " + val);
             for (int j = 0; j < count; j++){
                 out.write((val >>> j) & 1);
             }
