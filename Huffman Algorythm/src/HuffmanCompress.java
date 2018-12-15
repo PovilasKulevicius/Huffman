@@ -58,16 +58,16 @@ public class HuffmanCompress {
             CodeTree code = CodeTree.buildCodeTree(freqs); //Sudaromas kodu medis
 
 
-            System.out.println("length: "+freqs.frequencies.length);
+            //System.out.println("length: "+freqs.frequencies.length);
             CanonicalCode canonCode = new CanonicalCode(code); //suskaiciuoja simboliu gylius
             code = canonCode.toCodeTree();
 
 
             try (BitInputStream in = new BitInputStream(new BufferedInputStream(new FileInputStream(inputFile)))) {
                 try (BitOutputStream out = new BitOutputStream(new BufferedOutputStream(new FileOutputStream(outputFile)))) {
-                    System.out.println("_________compress_____");
                     writeFirstByte(bits, out);
                     writeCodeLengthTable(out, canonCode);
+                    writeValue((int) Math.pow(2, bits) + 1, bits +1, out);
                     compress(code, in, out);
                 }
             }
@@ -81,12 +81,17 @@ public class HuffmanCompress {
     static void writeCodeLengthTable(BitOutputStream out, CanonicalCode canonCode) throws IOException {
         for (int i = 0; i < symbolLimit+1; i++) {
             int val = canonCode.getCodeLength(i);
-            //System.out.println("val: " + val);
 
-            // Write value as 8 bits in big endian
-            for (int j = bits-1; j >= 0; j--) {
-                out.write((val >>> j) & 1); //Pasiimamas tik vienas bitas ir irasomas. Ima tik po viena bita is val
-                //System.out.println("Bit: "+((val >>> j) & 1));
+            if(val > 0) {
+                for (int j = bits+1 -1; j >= 0; j--) {
+                    out.write((i >>> j) & 1); //Pasiimamas tik vienas bitas ir irasomas. Ima tik po viena bita is val
+                    //System.out.println("Bit: "+((val >>> j) & 1));
+                    //System.out.println("Bit: "+((val >>> j) & 1));
+                }
+                for (int j = bits+1-1; j >= 0; j--) {
+                    out.write((val >>> j) & 1); //Pasiimamas tik vienas bitas ir irasomas. Ima tik po viena bita is val
+                    //System.out.println("Bit: "+((val >>> j) & 1));
+                }
             }
         }
     }
@@ -128,11 +133,15 @@ public class HuffmanCompress {
             }
         }
 
-        System.out.println("compression end");
-
     }
     static public void writeFirstByte(int val, BitOutputStream out)throws IOException{
         for (int j = 8-1; j >= 0; j--) {
+            out.write((val >>> j) & 1); //Pasiimamas tik vienas bitas ir irasomas. Ima tik po viena bita is val
+            //System.out.println("Bit: "+((val >>> j) & 1));
+        }
+    }
+    static public void writeValue(int val, int bits, BitOutputStream out)throws IOException{
+        for (int j = bits-1; j >= 0; j--) {
             out.write((val >>> j) & 1); //Pasiimamas tik vienas bitas ir irasomas. Ima tik po viena bita is val
             //System.out.println("Bit: "+((val >>> j) & 1));
         }

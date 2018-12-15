@@ -33,11 +33,9 @@ public final class HuffmanDecompress {
         try (BitInputStream in = new BitInputStream(new BufferedInputStream(new FileInputStream(inputFile)))) {
             try (BitOutputStream out =new BitOutputStream (new BufferedOutputStream(new FileOutputStream(outputFile)))) {
                 bits = readFirstByte(in);
-                System.out.println("_________decompress_____");
                 CanonicalCode canonCode = readCodeLengthTable(in);
                 CodeTree code = canonCode.toCodeTree();
                 decompress(code, in, out);
-                System.out.println("dec end");
             }
         }
     }
@@ -46,12 +44,18 @@ public final class HuffmanDecompress {
     // To allow unit testing, this method is package-private instead of private.
     static CanonicalCode readCodeLengthTable(BitInputStream in) throws IOException {
         int[] codeLengths = new int[(int)Math.pow(2,bits)+1];
-        for (int i = 0; i < codeLengths.length; i++) {
+        while (true) {
             // For this file format, we read 8 bits in big endian
+            int index = 0;
+            for (int j = 0; j < bits+1; j++)
+                index = (index << 1) | in.readNoEof();
+            if (index == (int) Math.pow(2, bits) + 1) { // Marking symbol
+                break;
+            }
             int val = 0;
-            for (int j = 0; j < bits; j++)
+            for (int j = 0; j < bits +1; j++)
                 val = (val << 1) | in.readNoEof();
-            codeLengths[i] = val;
+            codeLengths[index] = val;
         }
         return new CanonicalCode(codeLengths);
     }
@@ -74,11 +78,8 @@ public final class HuffmanDecompress {
             }
             //out.write(symbol);
         }
-        System.out.println("writing remaining");
         int bitsLeft = readFirstByte(in);
-        System.out.println("bits left" + bitsLeft);
         writeRemaining(bitsLeft, in, out);
-        System.out.println("pab");
     }
     static public int readFirstByte(BitInputStream in)throws IOException{
         int val = 0;
