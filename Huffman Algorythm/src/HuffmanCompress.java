@@ -31,15 +31,15 @@ public class HuffmanCompress {
             }
             else {
                 Scanner c = new Scanner(System.in);
-                System.out.println("Įveskite žodžio ilgį");
+                System.out.println("Iveskite zodzio ilgi");
                 bits = c.nextInt();
                 if (bits > 24) {
                     System.out.println("Error: word too long: ");
                     System.exit(1);
                 }
-                System.out.println("Įveskite nuskaitomą failą: ");
+                System.out.println("Iveskite nuskaitoma faila: ");
                 inputFileName = c.next();
-                System.out.println("Įveskite failą į kurį bus įrašomas suspaustas kodas: ");
+                System.out.println("Iveskite faila i kuri bus irasomas suspaustas kodas: ");
                 outputFileName = c.next();
                 c.close();
             }

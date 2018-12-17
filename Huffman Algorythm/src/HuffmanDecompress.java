@@ -14,9 +14,9 @@ public final class HuffmanDecompress {
         }
         else {
             Scanner c = new Scanner(System.in);
-            System.out.println("Įveskite dekoduojamą failą: ");
+            System.out.println("Iveskite dekoduojama faila: ");
             String inputfile = c.next();
-            System.out.println("Įveskite failą į kurį bus atspaustas kodas: ");
+            System.out.println("Iveskite faila i kuri bus atspaustas kodas: ");
             String outputfile = c.next();
             c.close();
             // Handle command line arguments
