@@ -6,13 +6,13 @@ public final class HuffmanDecompress {
 
     // Command line main application function.
     public static void main(String[] args) throws IOException {
-        String inputFileName = "";
-        String outputFileName = "";
-        if(args.length == 2){
-            inputFileName = args[0];
-            outputFileName = args[1];
-        }
-        else {
+//        String inputFileName = "";
+//        String outputFileName = "";
+//        if(args.length == 2){
+//            inputFileName = args[0];
+//            outputFileName = args[1];
+//        }
+//        else {
             Scanner c = new Scanner(System.in);
             System.out.println("Iveskite dekoduojama faila: ");
             String inputfile = c.next();
@@ -25,9 +25,9 @@ public final class HuffmanDecompress {
 //            System.exit(1);
 //            return;
 //        }
-        }
-        File inputFile  = new File(inputFileName);
-        File outputFile = new File(outputFileName);
+        //}
+        File inputFile  = new File(inputfile);
+        File outputFile = new File(outputfile);
 
         // Perform file decompression
         try (BitInputStream in = new BitInputStream(new BufferedInputStream(new FileInputStream(inputFile)))) {
